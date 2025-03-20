@@ -1,7 +1,7 @@
 # Python 3.9 の公式 Docker イメージを使用
 FROM python:3.9-bullseye
 
-# 必要なパッケージをインストール（Tesseract OCR & 日本語データ）
+# 必要なパッケージをインストール
 RUN apt-get update && \
     apt-get install -y \
     tesseract-ocr \
@@ -12,7 +12,7 @@ RUN apt-get update && \
     apt-get clean
 
 # `python` コマンドが使えない問題を修正
-RUN ln -s /usr/bin/python3 /usr/bin/python || true
+RUN ln -sf /usr/bin/python3 /usr/bin/python
 
 # 作業ディレクトリを設定
 WORKDIR /app
