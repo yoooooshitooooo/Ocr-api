@@ -14,7 +14,12 @@ RUN apt-get update && \
 RUN ln -s /usr/bin/tesseract /usr/local/bin/tesseract
 
 # `tesseract` コマンドがあるか確認
-RUN which tesseract && tesseract --version
+RUN echo "Checking Tesseract installation..." && \
+    which tesseract && \
+    tesseract --version
+
+# `PATH` を明示的に設定
+ENV PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
 # 環境変数を設定
 ENV TESSDATA_PREFIX="/usr/share/tesseract-ocr/4.00/tessdata/"
@@ -27,6 +32,9 @@ COPY . /app
 
 # Python ライブラリをインストール
 RUN pip install --no-cache-dir -r requirements.txt
+
+# デバッグ用：Tesseract のインストール確認
+RUN tesseract --version
 
 # サーバーを起動
 CMD ["python", "ocr.py"]
