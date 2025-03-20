@@ -9,6 +9,7 @@ RUN apt-get update && \
     tesseract-ocr-eng \
     libtesseract-dev && \
     apt-get clean
+    tesseract --version
 
 # Tesseract のPATHを設定
 ENV TESSDATA_PREFIX="/usr/share/tesseract-ocr/4.00/tessdata/"
