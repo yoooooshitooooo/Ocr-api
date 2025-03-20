@@ -13,7 +13,6 @@ RUN apt-get update && \
 
 # `python` コマンドが使えない問題を修正
 RUN ln -s /usr/bin/python3 /usr/bin/python || true
-RUN ln -s /usr/local/bin/python3 /usr/bin/python || true
 
 # 作業ディレクトリを設定
 WORKDIR /app
@@ -22,7 +21,7 @@ WORKDIR /app
 COPY . /app
 
 # Python ライブラリをインストール
-RUN pip install --no-cache-dir -r requirements.txt
+RUN python3 -m pip install --no-cache-dir -r requirements.txt
 
 # Tesseract のインストール確認
 RUN which tesseract && tesseract --version
