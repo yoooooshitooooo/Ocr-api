@@ -1,37 +1,31 @@
-# ベースイメージを指定
-FROM python:3.9
+# UbuntuベースのPythonイメージを使用（書き込み可能な環境にする）
+FROM ubuntu:20.04
 
-# 環境変数の設定
+# 必要な環境変数を設定
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TESSDATA_PREFIX="/usr/share/tesseract-ocr/4.00/tessdata/"
 
-# 必要なパッケージをインストール
-RUN apt-get update && \
-    apt-get install -y \
+# 必要なパッケージをインストール（apt-get update を回避）
+RUN apt update && \
+    apt install -y \
+    python3 python3-pip \
     tesseract-ocr \
     tesseract-ocr-jpn \
     tesseract-ocr-eng \
     libtesseract-dev \
     lsb-release && \
-    rm -rf /var/lib/apt/lists/*  # ここでパッケージリストを削除
+    rm -rf /var/lib/apt/lists/*  # これで不要なキャッシュを削除
 
-# Tesseract のパスを設定
+# Tesseract のシンボリックリンクを作成
 RUN ln -s /usr/bin/tesseract /usr/local/bin/tesseract
 
-# PATH を明示的に設定
-ENV PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
-
-# 作業ディレクトリを設定
+# Pythonのライブラリをインストール
 WORKDIR /app
-
-# 必要なファイルをコンテナにコピー
 COPY . /app
-
-# Pythonライブラリをインストール
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Tesseractのインストール確認
 RUN which tesseract && tesseract --version
 
 # サーバーを起動
-CMD ["python", "ocr.py"]
+CMD ["python3", "ocr.py"]
