@@ -1,6 +1,9 @@
 # Python 3.9 の公式 Docker イメージを使用
 FROM python:3.9
 
+# Python3 を python として認識させる
+RUN ln -s /usr/bin/python3 /usr/bin/python
+
 # 必要なパッケージをインストール
 RUN apt-get update && \
     apt-get install -y \
@@ -8,24 +11,22 @@ RUN apt-get update && \
     tesseract-ocr-jpn \
     tesseract-ocr-eng \
     libtesseract-dev \
-    python3-pip \
-    python3 && \
+    python3-pip && \
     apt-get clean
-
-# `python` コマンドがない問題を修正（Python3 を Python として使えるようにする）
-RUN ln -s /usr/bin/python3 /usr/bin/python
 
 # 作業ディレクトリを設定
 WORKDIR /app
 
-# 必要なファイルをコンテナにコピー
+# 必要なファイルをコピー
 COPY . /app
 
-# Python ライブラリをインストール
+# Pythonライブラリをインストール
+RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Tesseract のインストール確認
+# Python と Tesseract のインストール確認
+RUN which python && python --version
 RUN which tesseract && tesseract --version
 
-# サーバーを起動
+# アプリの起動
 CMD ["python", "ocr.py"]
