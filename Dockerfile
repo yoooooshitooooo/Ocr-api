@@ -1,5 +1,5 @@
-# Python 3.9 の公式 Docker イメージを使用
-FROM python:3.9-slim
+# Python 3.9 の公式 Docker イメージを使用（bullseye 版に変更）
+FROM python:3.9-bullseye
 
 # 必要なパッケージをインストール（Tesseract OCR & 日本語データ）
 RUN apt-get update && \
