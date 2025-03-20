@@ -5,15 +5,15 @@ FROM python:3.9
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TESSDATA_PREFIX="/usr/share/tesseract-ocr/4.00/tessdata/"
 
-# 必要なパッケージのインストール
+# 必要なパッケージをインストール
 RUN apt-get update && \
     apt-get install -y \
     tesseract-ocr \
     tesseract-ocr-jpn \
     tesseract-ocr-eng \
     libtesseract-dev \
-    lsb-release \
-    && apt-get clean
+    lsb-release && \
+    rm -rf /var/lib/apt/lists/*  # ← これを追加
 
 # Tesseract のシンボリックリンクを作成
 RUN ln -s /usr/bin/tesseract /usr/local/bin/tesseract
