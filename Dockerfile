@@ -14,13 +14,14 @@ RUN apt-get update && \
 # `python` コマンドがない問題を修正
 RUN ln -s /usr/bin/python3 /usr/bin/python
 
-# `tesseract` のインストール確認
+# `tesseract` のパスを確認して明示的に設定
 RUN echo "Checking Tesseract installation..." && \
     which tesseract && \
     tesseract --version
 
-# `tesseract` のパス設定
-ENV PATH="/usr/bin/tesseract:${PATH}"
+# `tesseract` のパス設定を環境変数として追加
+ENV TESSERACT_PATH="/usr/bin/tesseract"
+ENV PATH="${TESSERACT_PATH}:${PATH}"
 ENV TESSDATA_PREFIX="/usr/share/tesseract-ocr/4.00/tessdata/"
 
 # 作業ディレクトリを設定
@@ -32,7 +33,7 @@ COPY . /app
 # Python ライブラリをインストール
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Tesseract の動作確認
+# デバッグ用: Tesseract の動作確認
 RUN which tesseract && tesseract --version
 
 # サーバーを起動
