@@ -1,7 +1,7 @@
 # Python 3.9 の公式イメージを使用
 FROM python:3.9
 
-# 環境変数を設定（後でパスエラーを防ぐため）
+# 環境変数を設定
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TESSDATA_PREFIX="/usr/share/tesseract-ocr/4.00/tessdata/"
 
@@ -12,9 +12,8 @@ RUN apt-get update && \
     tesseract-ocr-jpn \
     tesseract-ocr-eng \
     libtesseract-dev \
-    lsb-release && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    lsb-release \
+    && apt-get clean
 
 # Tesseract のシンボリックリンクを作成
 RUN ln -s /usr/bin/tesseract /usr/local/bin/tesseract
@@ -32,7 +31,7 @@ COPY . /app
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Tesseract のインストール確認
-RUN tesseract --version
+RUN which tesseract && tesseract --version
 
 # サーバーを起動
 CMD ["python", "ocr.py"]
