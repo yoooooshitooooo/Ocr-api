@@ -1,7 +1,7 @@
-# Python 3.9 の公式 Docker イメージを使用（bullseye 版に変更）
-FROM python:3.9-bullseye
+# Python 3.9 の公式 Docker イメージを使用
+FROM python:3.9
 
-# 必要なパッケージをインストール（Tesseract OCR & 日本語データ）
+# 必要なパッケージをインストール
 RUN apt-get update && \
     apt-get install -y \
     tesseract-ocr \
@@ -11,24 +11,21 @@ RUN apt-get update && \
     python3-pip && \
     apt-get clean
 
-# Tesseract のPATHを設定
-ENV TESSDATA_PREFIX="/usr/share/tesseract-ocr/4.00/tessdata/"
+# `python` コマンドがない問題を修正
+RUN ln -s /usr/bin/python3 /usr/bin/python
 
 # 作業ディレクトリを設定
 WORKDIR /app
 
-# 必要なファイルをコンテナにコピー
+# 必要なファイルをコピー
 COPY . /app
 
-# Python ライブラリをインストール
-RUN pip3 install --no-cache-dir --upgrade pip
-RUN pip3 install --no-cache-dir -r requirements.txt
+# Pythonライブラリをインストール
+RUN pip install --no-cache-dir --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Tesseract のインストール確認
 RUN which tesseract && tesseract --version
-
-# 実行権限を追加（必要なら）
-RUN chmod +x /app/ocr.py
 
 # サーバーを起動
 CMD ["python3", "ocr.py"]
