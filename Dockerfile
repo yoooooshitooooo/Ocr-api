@@ -9,7 +9,6 @@ RUN apt-get update && \
     tesseract-ocr-eng \
     libtesseract-dev && \
     apt-get clean
-    tesseract --version
 
 # Tesseract のPATHを設定
 ENV TESSDATA_PREFIX="/usr/share/tesseract-ocr/4.00/tessdata/"
@@ -21,10 +20,14 @@ WORKDIR /app
 COPY . /app
 
 # Python ライブラリをインストール
+RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Tesseract のインストール確認
 RUN which tesseract && tesseract --version
 
+# 実行権限を追加（必要なら）
+RUN chmod +x /app/ocr.py
+
 # サーバーを起動
-CMD ["python", "ocr.py"]
+CMD ["python3", "ocr.py"]
