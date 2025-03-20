@@ -1,5 +1,5 @@
 # Python 3.9 の公式 Docker イメージを使用
-FROM python:3.9
+FROM python:3.9-slim
 
 # 必要なパッケージをインストール（Tesseract OCR & 日本語データ）
 RUN apt-get update && \
@@ -7,7 +7,8 @@ RUN apt-get update && \
     tesseract-ocr \
     tesseract-ocr-jpn \
     tesseract-ocr-eng \
-    libtesseract-dev && \
+    libtesseract-dev \
+    python3-pip && \
     apt-get clean
 
 # Tesseract のPATHを設定
@@ -20,8 +21,8 @@ WORKDIR /app
 COPY . /app
 
 # Python ライブラリをインストール
-RUN pip install --no-cache-dir --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip3 install --no-cache-dir --upgrade pip
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Tesseract のインストール確認
 RUN which tesseract && tesseract --version
