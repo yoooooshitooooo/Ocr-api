@@ -2,7 +2,7 @@
 FROM python:3.9
 
 # Python3 を python として認識させる
-RUN ln -s /usr/bin/python3 /usr/bin/python
+RUN ln -sf /usr/bin/python3 /usr/bin/python
 
 # 必要なパッケージをインストール
 RUN apt-get update && \
